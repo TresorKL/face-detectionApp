@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
 
   CameraDescription? description;
 
-  CameraLensDirection? cameraDirection;
+  CameraLensDirection cameraDirection = CameraLensDirection.front;
 
 
 
