@@ -88,9 +88,99 @@ class _HomeState extends State<Home> {
     return CustomPaint(painter: customPainter,);
   }
 
+  toggleCameraToFrontOrBack( ) async{
+    if(cameraDirection == CameraLensDirection.back){
+
+      cameraDirection = CameraLensDirection.front;
+    }else{
+      cameraDirection = CameraLensDirection.back;
+    }
+    await cameraController!.stopImageStream();
+    await cameraController!.dispose();
+
+
+    setState(() {
+      cameraController= null;
+    });
+
+    initCamera();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+
+    List<Widget>stackWidgetChildren = [];
+    size = MediaQuery.of(context).size;
+
+    if(cameraController!=null){
+      stackWidgetChildren.add(
+          Positioned(
+            top:0,
+            left: 0,
+            width: size!.width,
+            height: size!.height-250,
+            child: Container(
+              child:(cameraController!.value.isInitialized)
+                  ? AspectRatio(
+                aspectRatio: cameraController!.value.aspectRatio,
+                child: CameraPreview(cameraController),
+
+              )
+                  :Container(),
+            ),
+          ),
+      );
+    }
+
+
+    stackWidgetChildren.add(
+        Positioned(
+          top:0,
+          left: 0,
+          width: size!.width,
+          height: size!.height-250,
+          child: buildResult(),
+        )
+    );
+
+    stackWidgetChildren.add(
+        Positioned(
+          top: size!.height-250,
+          left: 0,
+          width: size!.width,
+          height: 250,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 80),
+            child: Column(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              IconButton(
+                  icon: const Icon(Icons.cached,color:Colors.white),
+                  iconSize: 50,
+                  color: Colors.black,
+                  onPressed: (){
+                    toggleCameraToFrontOrBack();
+                  })
+            ],
+
+          ),
+          ),
+        )
+    );
+
+    
+    return Scaffold(
+      body: Container(
+        margin: EdgeInsets.only(top: 0),
+        color: Colors.black,
+        child: Stack(
+          children: stackWidgetChildren,
+        ),
+      ),
+    );
   }
 
 
