@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class UtilsScanner{
   UtilsScanner._();
@@ -41,6 +42,28 @@ class UtilsScanner{
     }
 
     return allBytes.done().buffer.asUint8List();
+  }
+
+  static FirebaseVisionImageMetadata buildMetadata(CameraImage image, ImageRotation rotation)
+  {
+            return FirebaseVisionImageMetadata(
+                                        size: Size(image.width.toDouble(), image.height.toDouble()),
+                                        rotation: rotation,
+                                        rawFormat: image.format.raw,
+                                         planeData: image.planes.map((Plane plane)
+                                         {
+                                           
+                                           return FirebaseVisionImagePlaneMetadata(
+                                               bytesPerRow: plane.bytesPerRow,
+                                               height:plane.height,
+                                               width:plane.width,
+                                           );
+                                          }).toList(),
+            );
+  }
+
+  static Future<dynamic>detect({required CameraImage image, required Future<dynamic> Function(FirebaseVisionImage image) detectImage, required int imageRotation}) async{
+
   }
 
 }
