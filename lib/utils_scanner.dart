@@ -64,6 +64,11 @@ class UtilsScanner{
 
   static Future<dynamic>detect({required CameraImage image, required Future<dynamic> Function(FirebaseVisionImage image) detectImage, required int imageRotation}) async{
 
+    return detectImage(
+      FirebaseVisionImage.fromBytes(concatenaePlanes(image.planes), 
+          buildMetadata(image, rotationIntToImageRotation(imageRotation))
+      ),
+    );
   }
 
 }
